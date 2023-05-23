@@ -8,3 +8,8 @@ updates:
       - dependencies
       - go
       - Skip Changelog
+    assignees:
+      - "tillkuhn"
+      - "pschulten"
+    open-pull-requests-limit: 10
+
