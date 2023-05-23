@@ -762,8 +762,8 @@ github.com/hashicorp/vault-plugin-secrets-kv v0.13.3 h1:TUKpQY6fmTiUhaZ71/WTamEu
 github.com/hashicorp/vault-plugin-secrets-mongodbatlas v0.8.0 h1:VREm+cJGUXcPCakaYVxQt8wTVqTwJclsIIk2XuqpPbs=
 github.com/hashicorp/vault-plugin-secrets-openldap v0.9.1 h1:qgxKfXQ2WaBohjBr0m4EWYNQJTBO6dkhtqJJZ372YQw=
 github.com/hashicorp/vault-plugin-secrets-terraform v0.6.0 h1:N5s1ojXyG8gBZlx6BdqE04LviR0rw4vX1dDDMdnEzX8=
-github.com/hashicorp/vault/api v1.8.0 h1:7765sW1XBt+qf4XKIYE4ebY9qc/yi9V2/egzGSUNMZU=
-github.com/hashicorp/vault/api v1.8.0/go.mod h1:uJrw6D3y9Rv7hhmS17JQC50jbPDAZdjZoTtrCCxxs7E=
+github.com/hashicorp/vault/api v1.9.1 h1:LtY/I16+5jVGU8rufyyAkwopgq/HpUnxFBg+QLOAV38=
+github.com/hashicorp/vault/api v1.9.1/go.mod h1:78kktNcQYbBGSrOjQfHjXN32OhhxXnbYl3zxpd2uPUs=
 github.com/hashicorp/vault/sdk v0.6.1-0.20230302210543-38f40f637f4f h1:bdWa/SckATQyKiElmR/TDPNfRILakE9RvFFrH6sefY8=
 github.com/hashicorp/vault/sdk v0.6.1-0.20230302210543-38f40f637f4f/go.mod h1:XduFY2J0HMoM4mt4kkxlrrkF8bYowzUc2Gog6epWVsA=
 github.com/hashicorp/vic v1.5.1-0.20190403131502-bbfe86ec9443 h1:O/pT5C1Q3mVXMyuqg7yuAWUg/jMZR1/0QTzTRdNR6Uw=
