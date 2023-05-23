@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/fatih/color v1.13.0
-	github.com/hashicorp/go-hclog v1.3.1
+	github.com/hashicorp/go-hclog v1.5.0
 	github.com/hashicorp/vault v1.12.5
 	github.com/hashicorp/vault/api v1.8.0
 	github.com/hashicorp/vault/sdk v0.6.1-0.20230302210543-38f40f637f4f
