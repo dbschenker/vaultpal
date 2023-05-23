@@ -1,0 +1,13 @@
+**/*.tfvars
+**/*.tfstate*
+.idea
+*.retry
+.terraform
+*.iml
+target/*
+/vaultpal
+coverage.out
+coverage.html
+dist
+.gitlab_token
+dist/
