@@ -1,16 +1,24 @@
 # vaultpal :vulcan_salute:
 > { your pal for using vault }
 
-At DB Schenker, we use [HashiCorp Vault](https://www.vaultproject.io/) extensively to automate access to secrets and systems like *Kubernetes Clusters* or the *AWS Cloud*. While the Vault CLI and the [HTTP API](https://developer.hashicorp.com/vault/api-docs) already provide powerful means to access all Vault features, their usage can be cumbersome for end-users who merely want to manage the accesses they need for their daily work.
+At DB Schenker, we use [HashiCorp Vault](https://www.vaultproject.io/) extensively to automate access to secrets
+(e.g. application credentials), and systems such as *Kubernetes* or *AWS*. 
 
-Vaultpal aims to wrap those function with an easy to use CLI that doesn't deep vault knowledge or excessive configuration. 
+Even though the official Vault CLI and the [HTTP API](https://developer.hashicorp.com/vault/api-docs) provide the necessary 
+means to access all Vault features programmatically, their usage can become overly complex for end-users who simply want 
+to manage the accesses they need for their daily work.
 
+This is where vaultpal comes into play: It wraps common access management functions into higher level (sub)commands
+that don't require deep Vault know-how or excessive configuration. As an example, vaultpal can empower users to obtain 
+temporary, limited-privilege credentials from the AWS Security Token Service (STS) through HashiCorp Vault with a single 
+command call.
 
 ## Releases
 
-Check the [releases](./releases) section for binaries suitable for your operating system
+Check the [releases](./releases) section for the most recent binaries that are suitable for your operating system.
 
-Note that Vaultpal has been thoroughly tested on MacOS (`*darwin` binaries) and Linux, but not on Windows.  The binary should execute without issues, but there may be subtle differences in the handling of file locations.
+Please note that vaultpal has been thoroughly tested on MacOS (`*darwin` binaries) and Linux, but not on Windows. 
+The binary should execute without issues, but there may be subtle differences, e.g. in the handling of file locations.
 Alternatively, consider [Windows Subsystem for Linux](https://docs.microsoft.com/de-de/windows/wsl/install-win10).
 
 
@@ -26,8 +34,9 @@ Alternatively, consider [Windows Subsystem for Linux](https://docs.microsoft.com
     ```bash
       /Users/your_user/.local/bin:/Users/your_user/.pyenv/plugins/pyenv-virtualenv/shims:
     ```
-    That is each element is separated from others by <b>:</b> . So in this example: 
+    That is, each element is separated from others by <b>:</b> . So in this example: 
     ```/element/of/your/$PATH``` could be: ```/Users/your_user/.local/bin ``` . You may need to use this command with sudo.
+
 2. Check the installation with:
    ```bash
     vaultpal version
@@ -43,8 +52,13 @@ Alternatively, consider [Windows Subsystem for Linux](https://docs.microsoft.com
     ```
    
 ## Usage
-- 
-- help
+
+- perform login with vault cli since vaultpal relies on a valid existing token, e.g.:
+    ```bash
+    vault login -method=oidc
+    ```
+
+- just launch without arguments to get an overview of available commands and flags
    ```
     vaultpal
           { vault~Pal 👍 }
@@ -57,7 +71,7 @@ Alternatively, consider [Windows Subsystem for Linux](https://docs.microsoft.com
      vaultpal [command]
    
    Available Commands:
-     completion  Generates shell completion scripts
+     completion  Generate shell completion scripts
      export      Export various types of resources to shell
      help        Help about any command
      switch      Switch between roles
@@ -73,10 +87,7 @@ Alternatively, consider [Windows Subsystem for Linux](https://docs.microsoft.com
    Use "vaultpal [command] --help" for more information about a command.
    ```
 
-- perform login with vault cli, e.g.:
-    ```bash
-    vault login -method=oidc
-    ```
+## Features  
 
 ### Kubeconfig
 
@@ -93,6 +104,8 @@ Alternatively, consider [Windows Subsystem for Linux](https://docs.microsoft.com
    ```bash
    export KUBECONFIG=~/.vaultpal/kube/config
    ```
+4. Note that vaultpal will store a kubeconfig for each cluster with the cluster name as context name. This enables the usage of different clusters at the same time
+
 
 ### Switch Role
 
@@ -100,19 +113,19 @@ Alternatively, consider [Windows Subsystem for Linux](https://docs.microsoft.com
     ```bash
     vaultpal switch role k8s-admin
     ```
-2. vaultpal will create new token for given role and write it to vault token file
+2. vaultpal will create a new token for given role and write it to vault token file
 3. Use vault cli with the role token
 
-### Export AWS STS Creds
+### Export AWS STS Credentials
 
-1. Call vaultpal to create AWS STS credentials with vault
+1. Use vaultpal to create AWS STS credentials with vault
     ```bash
     vaultpal export awssts mytopic-prod-admin
     ```
 2. vaultpal will use vault aws secret engine to create AWS STS credentials. The default secret engine path is "aws"
 3. The credentials will be printed as bash export commands.
 
-#### Use Alias function
+### Use Alias function
 
 vaultpal provides a bash alias function to wrap the vaultpal command with direct export of the credentials to the current shell.
 
@@ -128,11 +141,13 @@ vaultpal provides a bash alias function to wrap the vaultpal command with direct
     ```bash
     vpalsts mytopic-prod-admin
     ```
+### Export AWS web console URL to shell
 
-#### Hints
-
-- vaultpal will store a kubeconfig for each cluster with the cluster name as context name
-- This enables the usage of different clusters at the same time
+1. Use vaultpal to create temporary sign-in URLs to access the AWS Web Console with a single click
+   ```
+   vaultpal -v warn export awsconsole myapp-prod-admin
+   https://signin.aws.amazon.com/federation?Action=login&Issuer=https://(...)
+   ```
 
 ## Configuration
 
@@ -142,7 +157,7 @@ for vaultpal kubeconfig functions
 ### Kubeconfig
 
 In order to render kubeconfig files, vaultpal requires meta information about the 
-kubernetes cluster. Therefor a cluster configuration object must be stored in vault providing
+kubernetes cluster. Therefore, a cluster configuration object must be stored in vault providing
 the required information. The configuration object must be stored in a kv secret engine version 2 at mount path "kv".
 The configuration must be accessible for all vaultpal users
 
@@ -154,10 +169,10 @@ with data:
 {
   "name":   "bibi",
   "pki":    "k8s-bibi-pki-kube",
-  "server": "https://api.bibi.mytopic.sh"
+  "server": "https://api.bibi.mytopic.com"
 }
 ```
-#### Alias
+#### Cluster Alias
 
 vaultpal supports the definition of an alias to a kubernetes cluster. This is useful if you want to use a generic
 endpoint like "int" or "prod" pointing to a cluster.
@@ -170,12 +185,15 @@ with data:
 {
   "name":   "int",
   "alias":  "bibi",
-  "server": "https://api.int.mytopic.sh"
+  "server": "https://api.int.mytopic.com"
 }
 ```
 Based on the alias value "bibi", vaultpal will read the configuration for cluster "bibi" in order to render the required certs and keys (pki).  
 
-# Outlook
+## Contributing
 
-- further improvements will follow!
-- start simple :baby_chick:, use fast :joystick:, enhance :gem:
+Pull requests are welcome. For major changes, please open an issue first to discuss your idea.
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)

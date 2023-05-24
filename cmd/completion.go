@@ -29,7 +29,7 @@ To configure your bash shell to load completions for each session add to your ba
 	zshCompletionCmd := &cobra.Command{
 		Use:   "zsh",
 		Short: "Completion for zsh",
-		Long:  "Generates completion for zsh",
+		Long:  "Generate completion for zsh",
 		Run: func(cmd *cobra.Command, args []string) {
 			runCompletionZsh(os.Stdout)
 		},
@@ -38,7 +38,7 @@ To configure your bash shell to load completions for each session add to your ba
 	bashCompletionCmd := &cobra.Command{
 		Use:   "bash",
 		Short: "Completion for bash",
-		Long:  "Generates completion for bash",
+		Long:  "Generate completion for bash",
 		Run: func(cmd *cobra.Command, args []string) {
 			rootCmd.GenBashCompletion(os.Stdout)
 		},
