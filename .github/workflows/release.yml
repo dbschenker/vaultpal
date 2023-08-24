@@ -21,6 +21,11 @@ jobs:
         name: Set up Go
         uses: actions/setup-go@v2
       -
+        name: Set Variables used .goreleaser.yml for ldflags
+        run: |
+           echo "VAULTPAL_VERSION=$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_ENV
+           echo "VAULTPAL_COMMIT=$(echo ${GITHUB_REF#refs/heads/})" >> "$GITHUB_ENV"
+      -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v4
         with:
