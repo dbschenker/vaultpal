@@ -1,5 +1,9 @@
 name: goreleaser
 
+env:
+  REGISTRY: ghcr.io  # default is docker.io
+  IMAGE_NAME: ${{ github.repository }}
+
 on:
   push:
     tags:
