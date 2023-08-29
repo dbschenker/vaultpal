@@ -51,6 +51,16 @@ Alternatively, consider [Windows Subsystem for Linux](https://docs.microsoft.com
     echo 'complete -F __start_vaultpal vp' >>~/.bashrc
     ```
    
+## Docker Container Images
+
+Released vaultpal versions are build for multiple architectures and pushed to the public GitHub Container Registry (https://ghcr.io).
+
+```
+$ docker pull ghcr.io/dbschenker/vaultpal:1.6.0
+$ docker run --rm dbschenker/vaultpal:1.6.0 version
+v1.6.0 (commit: 319f6c3)
+```
+
 ## Usage
 
 - perform login with vault cli since vaultpal relies on a valid existing token, e.g.:
