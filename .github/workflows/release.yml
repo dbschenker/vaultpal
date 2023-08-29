@@ -23,8 +23,8 @@ jobs:
       -
         name: Set Variables used in .goreleaser.yml for ldflags
         run: |
-           echo "VAULTPAL_VERSION=$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_ENV
-           echo "VAULTPAL_COMMIT=$(echo ${GITHUB_REF#refs/heads/})" >> "$GITHUB_ENV"
+           echo "VAULTPAL_COMMIT=$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_ENV
+           echo "VAULTPAL_VERSION=$(echo ${GITHUB_REF#refs/heads/})" >> "$GITHUB_ENV"
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v4
