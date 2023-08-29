@@ -4,15 +4,11 @@ on:
   push:
     tags:
       - '*'
-    # only temporarily for development
-    branches:
-      - pal-goes-ghcr
 
 jobs:
   goreleaser:
     name: Release binaries
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/') # todo remove, currently disabled for branch push
     permissions:
       contents: write  # for go-releaser binaries
     steps:
