@@ -98,4 +98,4 @@ jobs:
           build-args: |
             VAULTPAL_COMMIT=${{ env.VAULTPAL_COMMIT }}
             VAULTPAL_VERSION=${{ env.VAULTPAL_VERSION }}
-            VAULTPAL_BUILD_DATE=${{ env.BUILD_DATE }}
+            VAULTPAL_BUILD_DATE=${{ env.VAULTPAL_BUILD_DATE }}
