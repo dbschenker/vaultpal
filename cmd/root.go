@@ -77,7 +77,7 @@ var cfgFile string
 // The verbose flag value
 var v string
 
-// overwrite with go build -ldflags="-X github.com/dbschenker/vaultpal/cmd.Version=<VERSION>"
+// Version can be set with go build -ldflags="-X github.com/dbschenker/vaultpal/cmd.Version=<VERSION>"
 var Version = "v.latest"
 var Commit = "unknown"
 
