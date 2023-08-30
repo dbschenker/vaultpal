@@ -13,6 +13,7 @@ RUN CGO_ENABLED=0 go build \
   -ldflags="-w -s \
   -X 'github.com/dbschenker/vaultpal/cmd.Version=${VAULTPAL_VERSION}' \
   -X 'github.com/dbschenker/vaultpal/cmd.Commit=${VAULTPAL_COMMIT}' \
+  -X 'github.com/dbschenker/vaultpal/cmd.BuildDate=${VAULTPAL_BUILD_DATE}' \
   -extldflags '-static'" \
   -a -o main .
 

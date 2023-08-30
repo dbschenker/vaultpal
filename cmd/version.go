@@ -13,7 +13,7 @@ func newVersionCmd() *cobra.Command {
 
 vaultpal version`,
 		Run: func(cmd *cobra.Command, args []string) {
-			var msg = fmt.Sprintf("%s (commit: %s)", Version, Commit)
+			var msg = fmt.Sprintf("%s (commit: %s), built %s", Version, Commit, BuildDate)
 			println(msg)
 		},
 	}

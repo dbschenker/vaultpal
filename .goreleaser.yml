@@ -21,7 +21,7 @@ builds:
       - "6"
       - "7"
     ldflags:
-      - -s -w -X github.com/dbschenker/vaultpal/cmd.Version={{.Env.VAULTPAL_VERSION}} -X github.com/dbschenker/vaultpal/cmd.Commit={{.Env.VAULTPAL_COMMIT}}
+      - -s -w -X github.com/dbschenker/vaultpal/cmd.Version={{.Env.VAULTPAL_VERSION}} -X github.com/dbschenker/vaultpal/cmd.Commit={{.Env.VAULTPAL_COMMIT}} -X github.com/dbschenker/vaultpal/cmd.BuildDate={{.Env.VAULTPAL_BUILD_DATE}}
 archives:
   - format: zip
     files:
