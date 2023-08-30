@@ -15,9 +15,11 @@ builds:
     goarch:
       - amd64
       - arm64
-    goarm:
-      - "6"
-      - "7"
+    # (...) with GOARCH=arm64 do not need to set a variable GOARM (only with GOARCH=arm)
+    # https://github.com/goreleaser/goreleaser/issues/36
+    # goarm:
+    #  - "6"
+    #  - "7"
     ldflags:
       - -s -w -X github.com/dbschenker/vaultpal/cmd.Version={{.Env.VAULTPAL_VERSION}} -X github.com/dbschenker/vaultpal/cmd.Commit={{.Env.VAULTPAL_COMMIT}} -X github.com/dbschenker/vaultpal/cmd.BuildDate={{.Env.VAULTPAL_BUILD_DATE}}
 archives:
