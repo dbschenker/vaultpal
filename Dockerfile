@@ -3,6 +3,7 @@ FROM golang:1.20 as builder
 # Build arguments for this image (used as -X args in ldflags)
 ARG VAULTPAL_VERSION=""
 ARG VAULTPAL_COMMIT=""
+ARG VAULTPAL_BUILD_DATE=""
 
 WORKDIR /app
 COPY go.mod go.sum ./
