@@ -25,6 +25,7 @@ jobs:
         run: |
            echo "VAULTPAL_COMMIT=$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_ENV
            echo "VAULTPAL_VERSION=${GITHUB_REF#refs/*/}" >> "$GITHUB_ENV"
+           echo "VAULTPAL_BUILD_DATE=$(date +'%Y-%m-%dT%H:%M:%S')" >> "$GITHUB_ENV"
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v4
@@ -60,6 +61,7 @@ jobs:
         run: |
           echo "VAULTPAL_COMMIT=$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_ENV
           echo "VAULTPAL_VERSION=${GITHUB_REF#refs/*/}" >> "$GITHUB_ENV"
+          echo "VAULTPAL_BUILD_DATE=$(date +'%Y-%m-%dT%H:%M:%S')" >> "$GITHUB_ENV"
       -
         name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -96,3 +98,4 @@ jobs:
           build-args: |
             VAULTPAL_COMMIT=${{ env.VAULTPAL_COMMIT }}
             VAULTPAL_VERSION=${{ env.VAULTPAL_VERSION }}
+            VAULTPAL_BUILD_DATE=${{ env.VAULTPAL_BUILD_DATE }}

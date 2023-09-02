@@ -1,3 +1,8 @@
+# Use the following command for local testing (only creates binaries in local dist/ directory)
+# VAULTPAL_VERSION=latest VAULTPAL_BUILD_DATE=$(date +'%Y-%m-%dT%H:%M:%S') ˜
+# VAULTPAL_COMMIT=$(git log -1 --pretty=format:%h) \
+# goreleaser build --clean --skip-validate --snapshot
+
 before:
   hooks:
     - go mod tidy
@@ -13,15 +18,13 @@ builds:
       - darwin
       - windows
     goarch:
-      - "386"
       - amd64
-      - arm
       - arm64
-    goarm:
-      - "6"
-      - "7"
+    # (...) if we only have GOARCH=arm64, we do not need to set a variable GOARM
+    # https://github.com/goreleaser/goreleaser/issues/36
+    # goarm: ["6", "7"]
     ldflags:
-      - -s -w -X github.com/dbschenker/vaultpal/cmd.Version={{.Env.VAULTPAL_VERSION}} -X github.com/dbschenker/vaultpal/cmd.Commit={{.Env.VAULTPAL_COMMIT}}
+      - -s -w -X github.com/dbschenker/vaultpal/cmd.Version={{.Env.VAULTPAL_VERSION}} -X github.com/dbschenker/vaultpal/cmd.Commit={{.Env.VAULTPAL_COMMIT}} -X github.com/dbschenker/vaultpal/cmd.BuildDate={{.Env.VAULTPAL_BUILD_DATE}}
 archives:
   - format: zip
     files:

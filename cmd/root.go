@@ -6,6 +6,7 @@ import (
 	"github.com/spf13/cobra"
 	"io"
 	"os"
+	"time"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
@@ -77,9 +78,10 @@ var cfgFile string
 // The verbose flag value
 var v string
 
-// overwrite with go build -ldflags="-X github.com/dbschenker/vaultpal/cmd.Version=<VERSION>"
+// Version can be set with go build -ldflags="-X github.com/dbschenker/vaultpal/cmd.Version=<VERSION>"
 var Version = "v.latest"
 var Commit = "unknown"
+var BuildDate = time.Now().Format(time.RFC3339)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{

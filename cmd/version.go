@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
+	"runtime"
 )
 
 func newVersionCmd() *cobra.Command {
@@ -13,7 +14,8 @@ func newVersionCmd() *cobra.Command {
 
 vaultpal version`,
 		Run: func(cmd *cobra.Command, args []string) {
-			var msg = fmt.Sprintf("%s (commit: %s)", Version, Commit)
+			var msg = fmt.Sprintf("%s (commit: %s), built %s, platform %s/%s",
+				Version, Commit, BuildDate, runtime.GOOS, runtime.GOARCH)
 			println(msg)
 		},
 	}
