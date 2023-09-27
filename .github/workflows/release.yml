@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - '*'
+    branches:
+      - multi-platform-containers # temporary only
 
 jobs:
   goreleaser:
@@ -35,67 +37,3 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  ghcrpush:
-    name: Release container images
-    runs-on: ubuntu-latest
-    permissions:
-      packages: write  # for container registry
-    strategy:
-      fail-fast: false
-      matrix:
-        platform:
-          - linux/amd64
-          - linux/arm64
-    env:
-      REGISTRY: ghcr.io  # default is docker.io
-      IMAGE_NAME: ${{ github.repository }}
-    steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      -
-        name: Set Variables used in build-args for docker build
-        run: |
-          echo "VAULTPAL_COMMIT=$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_ENV
-          echo "VAULTPAL_VERSION=${GITHUB_REF#refs/*/}" >> "$GITHUB_ENV"
-          echo "VAULTPAL_BUILD_DATE=$(date +'%Y-%m-%dT%H:%M:%S')" >> "$GITHUB_ENV"
-      -
-        name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      -
-        name: Set up Docker Buildx for Multiple platform builds
-        uses: docker/setup-buildx-action@v2
-      -
-        name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.REGISTRY }}
-          #  You can use the ${{ github.actor }} context to automatically use the username of the user that triggered the workflow run.
-          username: ${{ github.actor }}
-          # You can use the automatically-generated GITHUB_TOKEN secret for the password
-          password: ${{ secrets.GITHUB_TOKEN }}
-      -
-        name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          platforms:  ${{ matrix.platform }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          # See GitHub Action produces unknown architecture and OS
-          # https://github.com/docker/build-push-action/issues/820
-          provenance: false
-          build-args: |
-            VAULTPAL_COMMIT=${{ env.VAULTPAL_COMMIT }}
-            VAULTPAL_VERSION=${{ env.VAULTPAL_VERSION }}
-            VAULTPAL_BUILD_DATE=${{ env.VAULTPAL_BUILD_DATE }}
