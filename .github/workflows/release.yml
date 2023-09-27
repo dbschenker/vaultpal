@@ -4,8 +4,6 @@ on:
   push:
     tags:
       - '*'
-    branches:
-      - multi-platform-containers # temporary only
 
 jobs:
   goreleaser:
