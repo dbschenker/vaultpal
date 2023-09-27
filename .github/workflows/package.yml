@@ -4,8 +4,6 @@ on:
   push:
     tags:
       - '*'
-    branches:
-      - multi-platform-containers # temporary only
 
 env:
   REGISTRY: ghcr.io  # default is docker.io
