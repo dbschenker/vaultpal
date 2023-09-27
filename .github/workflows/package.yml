@@ -1,0 +1,134 @@
+name: Publish to ghcr.io
+
+on:
+  push:
+    tags:
+      - '*'
+
+env:
+  REGISTRY: ghcr.io  # default is docker.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  ghcr-releaser:
+    name: Release container images
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write  # required to write to container registry
+    strategy:
+      fail-fast: true
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      -
+        name: Set Variables used in build-args for docker build
+        run: |
+          echo "VAULTPAL_COMMIT=$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_ENV
+          echo "VAULTPAL_VERSION=${GITHUB_REF#refs/*/}" >> "$GITHUB_ENV"
+          echo "VAULTPAL_BUILD_DATE=$(date +'%Y-%m-%dT%H:%M:%S')" >> "$GITHUB_ENV"
+      -
+        name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+        with:
+          # since we run platform specific builds in parallel, we only need the current platform
+          platforms: ${{ matrix.platform }}
+      -
+        name: Set up Docker Buildx for Multiple platform builds
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          #  You can use the ${{ github.actor }} context to automatically use the username of the user that triggered the workflow run.
+          username: ${{ github.actor }}
+          # You can use the automatically-generated GITHUB_TOKEN secret for the password
+          password: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Build docker image
+        id: build # so we can reference this step as ${{ steps.build.outputs.digest }} in export step
+        uses: docker/build-push-action@v4
+        with:
+          platforms:  ${{ matrix.platform }}
+          context: .
+          push: false # push later
+          # don't specify 'tags' here (error "get can't push tagged ref by digest")
+          # tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # provenance? See GitHub Action produces unknown architecture and OS: https://github.com/docker/build-push-action/issues/820
+          provenance: false
+          build-args: |
+            VAULTPAL_COMMIT=${{ env.VAULTPAL_COMMIT }}
+            VAULTPAL_VERSION=${{ env.VAULTPAL_VERSION }}
+            VAULTPAL_BUILD_DATE=${{ env.VAULTPAL_BUILD_DATE }}
+          # capture output for export and upload image digests
+          outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
+      -
+        name: Export image digest
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"
+      -
+        name: Upload image digest
+        uses: actions/upload-artifact@v3
+        with:
+          name: digests
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  # dedicated manifest merge job which runs after all platform specific build jobs are finished
+  # see https://docs.docker.com/build/ci/github-actions/multi-platform/
+  # see https://github.com/docker/build-push-action/issues/846
+  merge-manifests:
+    runs-on: ubuntu-latest
+    needs:
+      - ghcr-releaser
+    steps:
+      -
+        name: Download image digests
+        uses: actions/download-artifact@v3
+        with:
+          name: digests
+          path: /tmp/digests
+      -
+        name: Set up Docker Buildx # but no need for QEMU in this job
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Extract docker metadata (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      -
+        name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Create manifest list and push
+        working-directory: /tmp/digests
+        run: |
+          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
+      -
+        name: Inspect and test new multi-platform image
+        run: |
+          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
+          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }} version
