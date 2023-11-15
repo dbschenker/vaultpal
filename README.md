@@ -15,7 +15,7 @@ command call.
 
 ## Releases
 
-Check the [releases](./releases) section for the most recent binaries that are suitable for your operating system.
+Check the [releases](https://github.com/dbschenker/vaultpal/releases) section for the most recent binaries that are suitable for your operating system.
 
 Please note that vaultpal has been thoroughly tested on MacOS (`*darwin` binaries) and Linux, but not on Windows. 
 The binary should execute without issues, but there may be subtle differences, e.g. in the handling of file locations.
