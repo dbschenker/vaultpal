@@ -411,8 +411,8 @@ func TestWriteKubeconfigFile(t *testing.T) {
 	defer os.RemoveAll(dir)
 	os.Setenv(api.EnvVaultAddress, vm.Server.URL)
 	os.Setenv(api.EnvVaultToken, "1234")
-	os.Setenv(ENV_BRO_KUBECONFIG_FILE, dir+"/bro_test_config")
-	broFile := os.Getenv(ENV_BRO_KUBECONFIG_FILE)
+	os.Setenv(ENV_VAULTPAL_KUBECONFIG_FILE, dir+"/bro_test_config")
+	broFile := os.Getenv(ENV_VAULTPAL_KUBECONFIG_FILE)
 
 	err = os.Remove(broFile)
 	if err != nil {

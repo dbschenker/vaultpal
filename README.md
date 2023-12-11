@@ -17,7 +17,7 @@ command call.
 
 Check the [releases](https://github.com/dbschenker/vaultpal/releases) section for the most recent binaries that are suitable for your operating system.
 
-Please note that vaultpal has been thoroughly tested on MacOS (`*darwin` binaries) and Linux, but not on Windows. 
+Please note that vaultpal has been thoroughly tested on macOS (`*darwin` binaries) and Linux, but not on Windows. 
 The binary should execute without issues, but there may be subtle differences, e.g. in the handling of file locations.
 Alternatively, consider [Windows Subsystem for Linux](https://docs.microsoft.com/de-de/windows/wsl/install-win10).
 
@@ -182,7 +182,7 @@ with data:
   "server": "https://api.bibi.mytopic.com"
 }
 ```
-#### Cluster Alias
+### Cluster Alias
 
 vaultpal supports the definition of an alias to a kubernetes cluster. This is useful if you want to use a generic
 endpoint like "int" or "prod" pointing to a cluster.
@@ -199,6 +199,14 @@ with data:
 }
 ```
 Based on the alias value "bibi", vaultpal will read the configuration for cluster "bibi" in order to render the required certs and keys (pki).  
+
+### Environment Variables
+
+| Variable                 | Usage                                                          |
+|--------------------------|----------------------------------------------------------------|
+| VAULTPAL_NP_URL          | URL of Vault production environment, used for prompt label     |
+| VAULTPAL_PR_URL          | URL of Vault non-production environment, used for prompt label |
+| VAULTPAL_KUBECONFIG_FILE | Custom location of kubeconfig file                             |
 
 ## Contributing
 

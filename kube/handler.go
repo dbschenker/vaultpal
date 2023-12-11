@@ -14,7 +14,7 @@ import (
 	"strings"
 )
 
-const ENV_BRO_KUBECONFIG_FILE = "VBRO_KUBECONFIG_FILE"
+const ENV_VAULTPAL_KUBECONFIG_FILE = "VAULTPAL_KUBECONFIG_FILE"
 
 func contextEntryMap(c []ContextEntry) map[string]ContextEntry {
 	cm := map[string]ContextEntry{}
@@ -246,7 +246,7 @@ func verifyPalKubeConfig(cluster config.KubeCluster) error {
 func ensurePalKubeConfigFile() (string, error) {
 	kubeconfigFile := ""
 
-	if envPalKFile := os.Getenv(ENV_BRO_KUBECONFIG_FILE); envPalKFile == "" {
+	if envPalKFile := os.Getenv(ENV_VAULTPAL_KUBECONFIG_FILE); envPalKFile == "" {
 		home, err := homedir.Dir()
 		if err != nil {
 			return "", err
