@@ -87,18 +87,12 @@ func PromptString() {
 }
 
 func label(address string) string {
+	nonProd := os.Getenv("VAULTPAL_NP_URL")
+	prod := os.Getenv("VAULTPAL_PR_URL")
 	switch address {
-	case "https://vault.x.sh":
-		return "[SB]"
-	case "https://vault.y.sh":
-		return "[NP]"
-	case "https://vault.x.run":
-		return "[PR]"
-	case "https://vault.security.aws.x.net":
-		return "[DSB]"
-	case "https://vault-p-np.security.aws.x.com":
+	case nonProd:
 		return "N "
-	case "https://vault-p-pr.security.aws.x.com":
+	case prod:
 		return "P "
 	default:
 		return "[??]"
