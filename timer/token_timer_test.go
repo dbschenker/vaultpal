@@ -1,5 +1,23 @@
 package timer
 
+import (
+	"github.com/stretchr/testify/assert"
+	"os"
+	"testing"
+)
+
+func TestLabel(t *testing.T) {
+	_ = os.Setenv("VAULTPAL_NP_URL", "https://noprod")
+	_ = os.Setenv("VAULTPAL_PR_URL", "https://prod")
+	defer func() {
+		_ = os.Unsetenv("VAULTPAL_NP_URL")
+		_ = os.Unsetenv("VAULTPAL_PR_URL")
+	}()
+	assert.Equal(t, "N ", label("https://noprod"))
+	assert.Equal(t, "P ", label("https://prod"))
+	assert.Contains(t, label("https://nonsense"), "?")
+}
+
 //
 //import (
 //	"bytes"
