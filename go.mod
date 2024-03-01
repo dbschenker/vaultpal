@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/fatih/color v1.16.0
 	github.com/hashicorp/vault v1.14.1
-	github.com/hashicorp/vault/api v1.11.0
+	github.com/hashicorp/vault/api v1.12.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mitchellh/go-ps v1.0.0
 	github.com/mitchellh/mapstructure v1.5.0
