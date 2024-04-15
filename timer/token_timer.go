@@ -23,7 +23,7 @@ const (
 	Green          = "green"
 	Yellow         = "yellow"
 	Red            = "red"
-	NetworkTimeout = 25 * time.Millisecond
+	NetworkTimeout = 45 * time.Millisecond
 )
 
 var (
@@ -60,10 +60,11 @@ func Timer(bash bool, query bool, clear bool) {
 	ttl := vaultTokenTTL(vaultAddr, token)
 	if ttl > 0 {
 		output(ttl, false, label(vaultAddr), query)
+		os.Exit(0)
 	} else {
 		os.Exit(1)
 	}
-	os.Exit(0)
+
 }
 
 func currentToken() (string, error) {
@@ -100,15 +101,14 @@ func label(address string) string {
 }
 
 func vaultTokenTTL(endpoint string, currentToken string) time.Duration {
-	var cached = new(cache.Cache)
-	err := cache.ReadCache(cached)
+	cached, err := cache.Read(endpoint)
 	if err == nil && cached.Address == endpoint && cached.Token == currentToken {
 		// use cache and skip expensive vault network access
 		now := time.Now()
 		passed := now.Sub(cached.Updated)
 		newTTL := cached.TTL - passed
 		if newTTL > 0 {
-			_ = cache.WriteCache(cache.Cache{
+			_ = cache.Write(endpoint, cache.Cache{
 				Address: cached.Address,
 				Token:   cached.Token,
 				Updated: now,
@@ -120,6 +120,7 @@ func vaultTokenTTL(endpoint string, currentToken string) time.Duration {
 
 	if err := verifyNetwork(endpoint); err != nil {
 		// no network: no vault
+		fmt.Fprintf(os.Stderr, "no network: no vault\n")
 		os.Exit(0)
 	}
 
@@ -145,7 +146,7 @@ func vaultTokenTTL(endpoint string, currentToken string) time.Duration {
 		return 0
 	}
 
-	_ = cache.WriteCache(cache.Cache{
+	_ = cache.Write(endpoint, cache.Cache{
 		Address: endpoint,
 		Token:   currentToken,
 		Updated: time.Now(),
