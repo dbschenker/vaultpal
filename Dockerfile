@@ -1,4 +1,4 @@
-FROM golang:1.20 as builder
+FROM golang:1.21 as builder
 
 # Build arguments for this image (used as -X args in ldflags)
 ARG VAULTPAL_VERSION=""

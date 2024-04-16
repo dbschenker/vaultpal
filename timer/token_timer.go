@@ -23,7 +23,7 @@ const (
 	Green          = "green"
 	Yellow         = "yellow"
 	Red            = "red"
-	NetworkTimeout = 45 * time.Millisecond
+	NetworkTimeout = 75 * time.Millisecond
 )
 
 var (
