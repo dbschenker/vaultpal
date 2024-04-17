@@ -26,10 +26,6 @@ const (
 	NetworkTimeout = 75 * time.Millisecond
 )
 
-var (
-	bashDefault = false
-)
-
 func Timer(bash bool, query bool, clear bool) {
 
 	if bash {
@@ -49,11 +45,11 @@ func Timer(bash bool, query bool, clear bool) {
 
 	token, err := currentToken()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "get token failed: %e\n", err)
+		_, _ = fmt.Fprintf(os.Stderr, "get token failed: %e\n", err)
 		os.Exit(0)
 	}
 	if token == "" {
-		fmt.Fprintf(os.Stderr, "token empty\n")
+		_, _ = fmt.Fprintf(os.Stderr, "token empty\n")
 		os.Exit(0)
 	}
 
@@ -120,7 +116,7 @@ func vaultTokenTTL(endpoint string, currentToken string) time.Duration {
 
 	if err := verifyNetwork(endpoint); err != nil {
 		// no network: no vault
-		fmt.Fprintf(os.Stderr, "no network: no vault\n")
+		_, _ = fmt.Fprintf(os.Stderr, "no network: no vault\n")
 		os.Exit(0)
 	}
 
@@ -137,7 +133,7 @@ func vaultTokenTTL(endpoint string, currentToken string) time.Duration {
 	t, err := client.Auth().Token().LookupSelf()
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
-			fmt.Fprintf(os.Stderr, "unset your VAULT_ADDR variable, %s can't be reached \n", endpoint)
+			_, _ = fmt.Fprintf(os.Stderr, "unset your VAULT_ADDR variable, %s can't be reached \n", endpoint)
 		}
 		return 0
 	}
@@ -191,21 +187,21 @@ func output(ttl time.Duration, carriageReturn bool, label string, query bool) {
 		if query {
 			fmt.Println(Green)
 		} else {
-			info.Printf(msg)
+			_, _ = info.Printf(msg)
 		}
 
 	case factor <= 50 && factor >= 10:
 		if query {
 			fmt.Println(Yellow)
 		} else {
-			warn.Printf(msg)
+			_, _ = warn.Printf(msg)
 		}
 
 	default:
 		if query {
 			fmt.Println(Red)
 		} else {
-			crit.Printf(msg)
+			_, _ = crit.Printf(msg)
 		}
 	}
 }

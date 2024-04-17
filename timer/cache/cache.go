@@ -32,7 +32,9 @@ func get() (e map[string]Cache, err error) {
 		return nil, err
 	}
 
-	file.Close()
+	if err := file.Close(); err != nil {
+		return nil, err
+	}
 	return entries, nil
 }
 
@@ -54,7 +56,9 @@ func Write(key string, c Cache) error {
 		return err
 	}
 
-	file.Close()
+	if err := file.Close(); err != nil {
+		return err
+	}
 	return err
 }
 
