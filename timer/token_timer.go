@@ -23,7 +23,7 @@ const (
 	Green          = "green"
 	Yellow         = "yellow"
 	Red            = "red"
-	NetworkTimeout = 75 * time.Millisecond
+	NetworkTimeout = 275 * time.Millisecond
 )
 
 func Timer(bash bool, query bool, clear bool) {
