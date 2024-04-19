@@ -13,28 +13,61 @@ type Cache struct {
 	TTL     time.Duration
 }
 
-var cacheFile = os.TempDir() + "/token-timer.gob"
+var entries = make(map[string]Cache)
+var cacheFile = os.TempDir() + "/vaultpal-timer.gob"
 
 func Clear() {
 	_ = os.Remove(cacheFile)
 }
 
-func WriteCache(object interface{}) error {
-	file, err := os.Create(cacheFile)
-	if err == nil {
-		encoder := gob.NewEncoder(file)
-		_ = encoder.Encode(object)
+func get() (e map[string]Cache, err error) {
+	file, err := os.Open(cacheFile)
+	if err != nil {
+		return nil, err
 	}
-	file.Close()
+	decoder := gob.NewDecoder(file)
+
+	err = decoder.Decode(&entries)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := file.Close(); err != nil {
+		return nil, err
+	}
+	return entries, nil
+}
+
+func Write(key string, c Cache) error {
+	e, err := get()
+	if err != nil {
+		e = entries
+	}
+
+	file, err := os.Create(cacheFile)
+	if err != nil {
+		return err
+	}
+
+	e[key] = c
+	encoder := gob.NewEncoder(file)
+	err = encoder.Encode(e)
+	if err != nil {
+		return err
+	}
+
+	if err := file.Close(); err != nil {
+		return err
+	}
 	return err
 }
 
-func ReadCache(object interface{}) error {
-	file, err := os.Open(cacheFile)
-	if err == nil {
-		decoder := gob.NewDecoder(file)
-		err = decoder.Decode(object)
+func Read(key string) (Cache, error) {
+	e, err := get()
+	if err != nil {
+		return Cache{}, err
 	}
-	file.Close()
-	return err
+
+	return e[key], nil
+
 }
