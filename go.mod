@@ -6,7 +6,7 @@ go 1.22.2
 //replace github.com/SAP/go-hdb => github.com/SAP/go-hdb v1.8.11
 
 require (
-	github.com/fatih/color v1.16.0
+	github.com/fatih/color v1.17.0
 	github.com/hashicorp/vault v1.16.3
 	github.com/hashicorp/vault/api v1.13.0
 	github.com/mitchellh/go-homedir v1.1.0
