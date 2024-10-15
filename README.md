@@ -204,8 +204,8 @@ Based on the alias value "bibi", vaultpal will read the configuration for cluste
 
 | Variable                 | Usage                                                          |
 |--------------------------|----------------------------------------------------------------|
-| VAULTPAL_NP_URL          | URL of Vault production environment, used for prompt label     |
-| VAULTPAL_PR_URL          | URL of Vault non-production environment, used for prompt label |
+| VAULTPAL_NP_URL          | URL of Vault non-production environment, used for prompt label |
+| VAULTPAL_PR_URL          | URL of Vault production environment, used for prompt label     |
 | VAULTPAL_KUBECONFIG_FILE | Custom location of kubeconfig file                             |
 
 ## Contributing
