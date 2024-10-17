@@ -22,6 +22,11 @@ jobs:
           - linux/amd64
           - linux/arm64
     steps:
+      - 
+        name: Prepare PLATFORM_PAIR var for upload-artifact
+        run: |
+          platform=${{ matrix.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
       -
         name: Checkout
         uses: actions/checkout@v3
@@ -86,7 +91,9 @@ jobs:
         name: Upload image digest
         uses: actions/upload-artifact@v4
         with:
-          name: digests
+          # as of upload-artifact@v4, artifact name must be unique (and must NOT contain a slash :-))
+          # https://docs.docker.com/build/ci/github-actions/multi-platform/
+          name: digests-${{ env.PLATFORM_PAIR }}
           path: /tmp/digests/*
           if-no-files-found: error
           retention-days: 1
@@ -100,11 +107,12 @@ jobs:
       - ghcr-releaser
     steps:
       -
-        name: Download image digests
+        name: Download PLATFORM_PAIR specific image digests
         uses: actions/download-artifact@v4
         with:
-          name: digests
           path: /tmp/digests
+          pattern: digests-*
+          merge-multiple: true
       -
         name: Set up Docker Buildx # but no need for QEMU in this job
         uses: docker/setup-buildx-action@v2
