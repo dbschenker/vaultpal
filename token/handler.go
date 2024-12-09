@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/dbschenker/vaultpal/vault"
 	"github.com/hashicorp/vault/api"
-	"github.com/hashicorp/vault/command/config"
+	"github.com/hashicorp/vault/api/cliconfig"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 )
@@ -19,7 +19,7 @@ func SwitchRole(role string) error {
 		return errors.Wrap(err, "cannot create role token")
 	}
 
-	tokenHelper, err := config.DefaultTokenHelper()
+	tokenHelper, err := cliconfig.DefaultTokenHelper()
 	if err != nil {
 		return fmt.Errorf("error getting token helper: %s", err)
 	}
