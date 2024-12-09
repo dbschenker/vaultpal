@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	u "github.com/dbschenker/vaultpal/internal/testutil"
 	"github.com/hashicorp/vault/api"
-	"github.com/hashicorp/vault/command/config"
+	"github.com/hashicorp/vault/api/cliconfig"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
@@ -163,7 +163,7 @@ func TestSwitchTokenRoleWrite(t *testing.T) {
 		err := SwitchRole(test.role)
 		assert.Nil(t, err)
 
-		tokenHelper, err := config.DefaultTokenHelper()
+		tokenHelper, err := cliconfig.DefaultTokenHelper()
 		token, err := tokenHelper.Get()
 		assert.Equal(t, test.WantRoleToken, token)
 	}

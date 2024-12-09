@@ -3,7 +3,7 @@ package vault
 import (
 	"fmt"
 	"github.com/hashicorp/vault/api"
-	"github.com/hashicorp/vault/command/config"
+	"github.com/hashicorp/vault/api/cliconfig"
 	"github.com/pkg/errors"
 	"net/url"
 	"os"
@@ -17,7 +17,7 @@ func NewClient() (*api.Client, error) {
 	// if unset, fallback to ~/.vault-token or external token helper
 	token := os.Getenv(api.EnvVaultToken)
 	if token == "" {
-		tokenHelper, err := config.DefaultTokenHelper()
+		tokenHelper, err := cliconfig.DefaultTokenHelper()
 		if err != nil {
 			return nil, fmt.Errorf("error getting token helper: %s", err)
 		}

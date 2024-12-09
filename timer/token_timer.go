@@ -15,7 +15,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/hashicorp/vault/api"
-	"github.com/hashicorp/vault/command/config"
+	"github.com/hashicorp/vault/api/cliconfig"
 )
 
 const (
@@ -64,7 +64,7 @@ func Timer(bash bool, query bool, clear bool) {
 }
 
 func currentToken() (string, error) {
-	tokenHelper, err := config.DefaultTokenHelper()
+	tokenHelper, err := cliconfig.DefaultTokenHelper()
 	if err != nil {
 		return "", fmt.Errorf("error getting token helper: %s", err)
 	}
