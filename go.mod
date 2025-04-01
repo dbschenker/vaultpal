@@ -2,7 +2,7 @@ module github.com/dbschenker/vaultpal
 
 go 1.23.0
 
-toolchain go1.23.4
+toolchain go1.24.1
 
 // STILL NEEDED FOR INTELLIJ ?
 //replace github.com/SAP/go-hdb => github.com/SAP/go-hdb v1.8.11
@@ -20,7 +20,7 @@ require (
 	github.com/stretchr/testify v1.10.0
 	gopkg.in/ini.v1 v1.67.0
 	gopkg.in/yaml.v2 v2.4.0
-	k8s.io/client-go v0.32.2
+	k8s.io/client-go v0.32.3
 )
 
 require (
