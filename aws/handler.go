@@ -47,7 +47,7 @@ const (
 	errFederationRequest   = "failed to request federation"
 	errFederationResponse  = "failed to receive federation response body"
 	errFederationUnmarshal = "failed to unmarshal sign-in token"
-	default_engine         = "aws"
+	defaultEngine          = "aws"
 )
 
 func ExportSTSCredentials(engine string, role string) error {
@@ -144,24 +144,30 @@ func GenerateConsoleURL(engine string, suppressBrowser bool, role string) error 
 		return err
 	}
 
-	var (
-		destination = "https://console.aws.amazon.com/"
-		issuer      = os.Getenv(api.EnvVaultAddress)
-		token       = signInToken
-	)
-
-	signInURL := fmt.Sprintf("https://signin.aws.amazon.com/federation?Action=login&Issuer=%s&Destination=%s&SigninToken=%s\n",
-		issuer,
-		destination,
-		token)
-
-	_, _ = os.Stdout.Write([]byte(signInURL))
+	consoleURL := signInURL(signInToken)
+	_, _ = os.Stdout.Write([]byte(consoleURL))
 
 	if !suppressBrowser {
-		_ = openBrowser(signInURL)
+		_ = openBrowser(consoleURL)
 	}
 
 	return nil
+}
+
+func signInURL(signInToken string) string {
+	var (
+		destination = "https://console.aws.amazon.com/"
+		issuer      = os.Getenv(api.EnvVaultAddress)
+	)
+	if os.Getenv("AWS_REGION") != "" {
+		destination = fmt.Sprintf("https://%s.console.aws.amazon.com/", os.Getenv("AWS_REGION"))
+	}
+
+	return fmt.Sprintf("https://signin.aws.amazon.com/federation?Action=login&Issuer=%s&Destination=%s&SigninToken=%s\n",
+		issuer,
+		destination,
+		signInToken)
+
 }
 
 func createSignInToken(creds creds) (string, error) {
@@ -247,7 +253,7 @@ func WriteAWSCreds(role string, profile string) error {
 		return err
 	}
 
-	creds, err := getCreds(default_engine, role)
+	creds, err := getCreds(defaultEngine, role)
 	if err != nil {
 		// we must make sure, nothing goes to STDOUT
 		//log.Error("Failed: ", err)
@@ -327,7 +333,7 @@ func ensureConfigExists(profile string) error {
 				return err
 			}
 
-			// create an base config file
+			// create a base config file
 			err = os.WriteFile(filename, []byte("["+profile+"]"), 0600)
 			if err != nil {
 				return err

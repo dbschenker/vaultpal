@@ -153,7 +153,7 @@ vaultpal provides a bash alias function to wrap the vaultpal command with direct
     ```
 ### Export AWS web console URL to shell
 
-1. Use vaultpal to create temporary sign-in URLs to access the AWS Web Console with a single click
+1. Use vaultpal to create temporary sign-in URLs to access the AWS Web Console with a single click. If the environment variable AWS_REGION is set, the URL will redirect to the region specific console URL.
    ```
    vaultpal -v warn export awsconsole myapp-prod-admin
    https://signin.aws.amazon.com/federation?Action=login&Issuer=https://(...)

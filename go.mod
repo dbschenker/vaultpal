@@ -1,7 +1,8 @@
 module github.com/dbschenker/vaultpal
 
-go 1.23.0
-toolchain go1.24.1
+go 1.24.0
+
+toolchain go1.24.3
 
 // STILL NEEDED FOR INTELLIJ ?
 //replace github.com/SAP/go-hdb => github.com/SAP/go-hdb v1.8.11
