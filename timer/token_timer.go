@@ -187,21 +187,21 @@ func output(ttl time.Duration, carriageReturn bool, label string, query bool) {
 		if query {
 			fmt.Println(Green)
 		} else {
-			_, _ = info.Printf(msg)
+			_, _ = info.Println(msg)
 		}
 
 	case factor <= 50 && factor >= 10:
 		if query {
 			fmt.Println(Yellow)
 		} else {
-			_, _ = warn.Printf(msg)
+			_, _ = warn.Println(msg)
 		}
 
 	default:
 		if query {
 			fmt.Println(Red)
 		} else {
-			_, _ = crit.Printf(msg)
+			_, _ = crit.Println(msg)
 		}
 	}
 }

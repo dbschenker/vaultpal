@@ -22,7 +22,7 @@ type mockData struct {
 	security_token string
 }
 
-func (m *mockData) mockReadSTSCreds(t *testing.T, w http.ResponseWriter, r *http.Request) {
+func (m *mockData) mockReadSTSCreds(t *testing.T, w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	sec := api.Secret{Data: map[string]interface{}{
 		"access_key":     m.access_key,
@@ -32,7 +32,7 @@ func (m *mockData) mockReadSTSCreds(t *testing.T, w http.ResponseWriter, r *http
 	u.WriteJsonResponse(t, sec, w)
 }
 
-func (m *mockData) mockReadWrongCreds(t *testing.T, w http.ResponseWriter, r *http.Request) {
+func (m *mockData) mockReadWrongCreds(t *testing.T, w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	sec := api.Secret{Data: map[string]interface{}{
 		"mop": "map",
@@ -40,7 +40,7 @@ func (m *mockData) mockReadWrongCreds(t *testing.T, w http.ResponseWriter, r *ht
 	u.WriteJsonResponse(t, sec, w)
 }
 
-func (m *mockData) mockReadSTSCredsSkipEmpty(t *testing.T, w http.ResponseWriter, r *http.Request) {
+func (m *mockData) mockReadSTSCredsSkipEmpty(t *testing.T, w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	sec := api.Secret{Data: map[string]interface{}{}}
 
@@ -138,9 +138,8 @@ func TestExportSTSCreds(t *testing.T) {
 
 	vm := u.NewVaultServerMock(t)
 	defer vm.CloseServer()
-	os.Setenv(api.EnvVaultAddress, vm.Server.URL)
-	os.Setenv(api.EnvVaultToken, "1234")
-
+	_ = os.Setenv(api.EnvVaultAddress, vm.Server.URL)
+	_ = os.Setenv(api.EnvVaultToken, "1234")
 	for _, test := range tests {
 		t.Logf("Executing TestCase: %s", test.Name)
 		vm.ServeMocks = test.serveMocks
@@ -148,6 +147,7 @@ func TestExportSTSCreds(t *testing.T) {
 		if test.WantErr != "" {
 			assert.EqualError(t, err, test.WantErr)
 		} else if test.WantErrContains != "" {
+			assert.NotNil(t, err)
 			assert.Contains(t, err.Error(), test.WantErrContains)
 		} else {
 			assert.Nil(t, err)
@@ -159,8 +159,8 @@ func TestReadSTSCreds(t *testing.T) {
 
 	vm := u.NewVaultServerMock(t)
 	defer vm.CloseServer()
-	os.Setenv(api.EnvVaultAddress, vm.Server.URL)
-	os.Setenv(api.EnvVaultToken, "1234")
+	_ = os.Setenv(api.EnvVaultAddress, vm.Server.URL)
+	_ = os.Setenv(api.EnvVaultToken, "1234")
 
 	for _, test := range tests {
 		t.Logf("Executing TestCase: %s", test.Name)
@@ -170,6 +170,7 @@ func TestReadSTSCreds(t *testing.T) {
 			assert.EqualError(t, err, test.WantErr)
 			assert.Empty(t, exportCmd)
 		} else if test.WantErrContains != "" {
+			assert.NotNil(t, err)
 			assert.Contains(t, err.Error(), test.WantErrContains)
 			assert.Empty(t, exportCmd)
 		} else {
@@ -177,6 +178,13 @@ func TestReadSTSCreds(t *testing.T) {
 			assert.Equal(t, buildWantExportCmd(test.MockData), exportCmd)
 		}
 	}
+}
+
+func TestConsoleURL(t *testing.T) {
+	t.Setenv("AWS_REGION", "eu-decentral-2")
+	t.Setenv(api.EnvVaultAddress, "https://vault.example.com")
+	consoleURL := signInURL("test-token")
+	assert.Equal(t, "https://signin.aws.amazon.com/federation?Action=login&Issuer=https://vault.example.com&Destination=https://eu-decentral-2.console.aws.amazon.com/&SigninToken=test-token\n", consoleURL)
 }
 
 func buildWantExportCmd(data mockData) string {
