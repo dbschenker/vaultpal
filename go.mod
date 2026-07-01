@@ -18,7 +18,7 @@ require (
 	github.com/stretchr/testify v1.11.1
 	gopkg.in/ini.v1 v1.67.1
 	gopkg.in/yaml.v2 v2.4.0
-	k8s.io/client-go v0.36.0
+	k8s.io/client-go v0.36.2
 )
 
 require (
