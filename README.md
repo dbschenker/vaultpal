@@ -1,7 +1,7 @@
 # vaultpal :vulcan_salute:
 > { your pal for using vault }
 
-At DB Schenker, we use [HashiCorp Vault](https://www.vaultproject.io/) extensively to automate access to secrets
+At Schenker, we use [HashiCorp Vault](https://www.vaultproject.io/) extensively to automate access to secrets
 (e.g. application credentials), and systems such as *Kubernetes* or *AWS*. 
 
 Even though the official Vault CLI and the [HTTP API](https://developer.hashicorp.com/vault/api-docs) provide the necessary 
