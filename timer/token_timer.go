@@ -45,7 +45,7 @@ func Timer(bash bool, query bool, clear bool) {
 
 	token, err := currentToken()
 	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "get token failed: %e\n", err)
+		_, _ = fmt.Fprintf(os.Stderr, "get token failed: %v\n", err)
 		os.Exit(0)
 	}
 	if token == "" {

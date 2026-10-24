@@ -117,7 +117,7 @@ func handleWriteKubeconfig(kconfig []byte, cluster string, role string) ([]byte,
 	if err != nil {
 		return nil, errors.Wrap(err, "error getting own identity")
 	} else if user == nil || *user == "" {
-		return nil, errors.New("identity must be not empty/nil")
+		return nil, errors.New("identity must not be empty/nil")
 	}
 
 	log.WithFields(log.Fields{

@@ -52,7 +52,7 @@ func GetIdentityName(client *api.Client) (*string, error) {
 
 	name, ok := self.Data["display_name"]
 	if !ok {
-		return nil, fmt.Errorf("could no find display name: %v", self.Data)
+		return nil, fmt.Errorf("could not find display name: %v", self.Data)
 	}
 	ret := name.(string)
 	return &ret, nil

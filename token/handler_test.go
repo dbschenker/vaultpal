@@ -80,7 +80,7 @@ func TestSwitchTokenRole(t *testing.T) {
 			serveMocks: map[string]u.ServeMockFunc{
 				PATH_LOOKUP_SELF: (&mockData{identity: ""}).mockTokenLookupSelf,
 			},
-			WantErr: "identity must be not empty/nil",
+			WantErr: "identity must not be empty/nil",
 		},
 		{
 			Name: "Test normal flow",

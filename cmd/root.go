@@ -87,7 +87,7 @@ var BuildDate = time.Now().Format(time.RFC3339)
 var rootCmd = &cobra.Command{
 	Use:                    "vaultpal",
 	Short:                  "vault~Pal 👍 will assist you",
-	Long:                   `vault~Pal 👍 will help you using vault in your daily work.`,
+	Long:                   `vault~Pal 👍 will help you use vault in your daily work.`,
 	Run:                    runHelp,
 	BashCompletionFunction: custom_completion,
 }
@@ -123,7 +123,7 @@ func init() {
 		}
 		return nil
 	}
-	rootCmd.PersistentFlags().StringVarP(&v, "verbosity", "v", logrus.InfoLevel.String(), "Log level (debug, info, warn, error, fatal, panic")
+	rootCmd.PersistentFlags().StringVarP(&v, "verbosity", "v", logrus.InfoLevel.String(), "Log level (debug, info, warn, error, fatal, panic)")
 
 }
 
@@ -163,7 +163,7 @@ func runHelp(cmd *cobra.Command, args []string) {
 	cmd.Help()
 }
 
-// setUpLogs set the log output ans the log level
+// setUpLogs sets the log output and the log level
 func setUpLogs(out io.Writer, level string) error {
 	logrus.SetOutput(out)
 	lvl, err := logrus.ParseLevel(level)

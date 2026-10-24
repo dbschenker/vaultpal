@@ -74,7 +74,7 @@ v1.6.0 (commit: 319f6c3)
           { vault~Pal 👍 }
          °- (🕶 ) v1.5.2 -°
 
-   vault~Pal 👍 will help you using vault in your daily work.
+   vault~Pal 👍 will help you use vault in your daily work.
    
    Usage:
      vaultpal [flags]
@@ -92,7 +92,7 @@ v1.6.0 (commit: 319f6c3)
    Flags:
          --config string      config file (default is $HOME/.vaultpal.yaml)
      -h, --help               help for vaultpal
-     -v, --verbosity string   Log level (debug, info, warn, error, fatal, panic (default "info")
+     -v, --verbosity string   Log level (debug, info, warn, error, fatal, panic) (default "info")
    
    Use "vaultpal [command] --help" for more information about a command.
    ```

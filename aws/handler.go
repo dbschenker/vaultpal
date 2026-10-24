@@ -287,7 +287,7 @@ func WriteAWSCreds(role string, profile string) error {
 func resolveSymlink(filename string) (string, error) {
 	sympath, err := filepath.EvalSymlinks(filename)
 
-	// return the un modified filename
+	// return the unmodified filename
 	if os.IsNotExist(err) {
 		return filename, nil
 	}
